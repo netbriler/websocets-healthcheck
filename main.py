@@ -10,10 +10,11 @@ async def healthz_handler(request):
     try:
         async with websockets.connect(WEB_SOCKETS_URL) as websocket:
             response = await websocket.recv()
-            if response != 'ok':
+            if response.lower() != 'ok':
                 return web.Response(status=500, text='Not OK\n')
-    except Exception:
-        return web.Response(status=500, text='Not OK\n')
+    except Exception as e:
+        text = f'Not OK\n{e}'
+        return web.Response(status=500, text=text)
 
     return web.Response(status=200, text='OK\n')
 
